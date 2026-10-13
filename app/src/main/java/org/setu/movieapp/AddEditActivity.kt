@@ -4,7 +4,7 @@ package org.setu.movieapp
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
-import android.widget.LinearLayout
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
@@ -20,68 +20,39 @@ class AddEditActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        createUserInterface()
+        setContentView(R.layout.activity_add_edit)
+
+        titleInput = findViewById(R.id.titleInput)
+        descriptionInput = findViewById(R.id.descriptionInput)
+        dayInput = findViewById(R.id.dayInput)
+        monthInput = findViewById(R.id.monthInput)
+
+        val saveButton =
+            findViewById<Button>(R.id.saveButton)
+
+        val cancelButton =
+            findViewById<Button>(R.id.cancelButton)
 
         editingId = intent.getLongExtra("id", -1L)
+            .takeIf { it != -1L }
 
-        if (editingId != -1L) {
+        if (editingId != null) {
+            findViewById<TextView>(R.id.formTitle).text =
+                "Edit Movie"
+
             loadExistingMovie(editingId!!)
         }
-    }
 
-    private fun createUserInterface() {
-
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(32, 320, 32, 32)
+        saveButton.setOnClickListener {
+            saveMovie()
         }
 
-        titleInput = EditText(this).apply {
-            hint = "Movie Title"
+        cancelButton.setOnClickListener {
+            finish()
         }
-
-        descriptionInput = EditText(this).apply {
-            hint = "Description"
-        }
-
-        dayInput = EditText(this).apply {
-            hint = "Release Day"
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-        }
-
-        monthInput = EditText(this).apply {
-            hint = "Release Month"
-            inputType = android.text.InputType.TYPE_CLASS_NUMBER
-        }
-
-        val saveButton = Button(this).apply {
-            text = "Save"
-
-            setOnClickListener {
-                saveMovie()
-            }
-        }
-
-        val cancelButton = Button(this).apply {
-            text = "Cancel"
-
-            setOnClickListener {
-                finish()
-            }
-        }
-
-        root.addView(titleInput)
-        root.addView(descriptionInput)
-        root.addView(dayInput)
-        root.addView(monthInput)
-        root.addView(saveButton)
-        root.addView(cancelButton)
-
-        setContentView(root)
     }
 
     private fun loadExistingMovie(id: Long) {
-
         val movie = AppData.movies.findOne(id)
 
         if (movie == null) {
@@ -102,38 +73,38 @@ class AddEditActivity : AppCompatActivity() {
     }
 
     private fun saveMovie() {
-
         val title = titleInput.text.toString().trim()
-        val description = descriptionInput.text.toString().trim()
+        val description =
+            descriptionInput.text.toString().trim()
 
         if (title.isEmpty()) {
-            titleInput.error = "Movie title is required"
+            titleInput.error = "Title is required"
             return
         }
 
-        val day = dayInput.text.toString().toDoubleOrNull()
+        val day = dayInput.text.toString().toIntOrNull()
 
-        if (day == null || day < 1 || day > 31) {
-            dayInput.error = "Enter a valid day (1-31)"
+        if (day == null || day !in 1..31) {
+            dayInput.error = "Enter a day from 1 to 31"
             return
         }
 
-        val month = monthInput.text.toString().toDoubleOrNull()
+        val month = monthInput.text.toString().toIntOrNull()
 
-        if (month == null || month < 1 || month > 12) {
-            monthInput.error = "Enter a valid month (1-12)"
+        if (month == null || month !in 1..12) {
+            monthInput.error = "Enter a month from 1 to 12"
             return
         }
 
-        if (editingId == null || editingId == -1L) {
+        val movie = Movie(
+            id = editingId ?: 0L,
+            title = title,
+            description = description,
+            releaseDay = day.toDouble(),
+            releaseMonth = month.toDouble()
+        )
 
-            val movie = Movie(
-                title = title,
-                description = description,
-                releaseDay = day,
-                releaseMonth = month
-            )
-
+        if (editingId == null) {
             AppData.movies.create(movie)
 
             Toast.makeText(
@@ -141,17 +112,7 @@ class AddEditActivity : AppCompatActivity() {
                 "Movie created",
                 Toast.LENGTH_SHORT
             ).show()
-
         } else {
-
-            val movie = Movie(
-                id = editingId!!,
-                title = title,
-                description = description,
-                releaseDay = day,
-                releaseMonth = month
-            )
-
             AppData.movies.update(movie)
 
             Toast.makeText(
