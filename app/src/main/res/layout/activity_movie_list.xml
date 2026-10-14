@@ -27,6 +27,28 @@
         android:textSize="15sp"
         android:layout_marginBottom="24dp" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="FILTER BY RELEASE MONTH"
+        android:textColor="#A996FF"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="8dp" />
+
+
+    <Spinner
+        android:id="@+id/monthSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@drawable/movie_spinner_background"
+        android:paddingStart="16dp"
+        android:paddingEnd="48dp"
+        android:spinnerMode="dropdown"
+        android:dropDownWidth="match_parent"
+        android:layout_marginBottom="24dp" />
+
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moviesRecyclerView"
         android:layout_width="match_parent"
