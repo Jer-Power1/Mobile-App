@@ -2,64 +2,141 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#0F1020">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="24dp">
 
         <TextView
             android:id="@+id/formTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Add Movie"
-            android:textSize="28sp"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginBottom="24dp" />
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fill in the details below"
+            android:textColor="#A6A6BC"
+            android:textSize="15sp"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MOVIE TITLE"
+            android:textColor="#A996FF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/titleInput"
             android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@drawable/movie_input_background"
+            android:hint="Enter movie title"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8E8FA9"
+            android:inputType="textCapSentences"
+            android:singleLine="true"
+            android:padding="16dp"
+            android:layout_marginBottom="22dp" />
+
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Movie Title"
-            android:inputType="textCapSentences" />
+            android:text="DESCRIPTION"
+            android:textColor="#A996FF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
         <EditText
             android:id="@+id/descriptionInput"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Description"
+            android:layout_height="120dp"
+            android:background="@drawable/movie_input_background"
+            android:hint="What's this movie about?"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8E8FA9"
             android:inputType="textMultiLine"
-            android:minLines="3" />
+            android:gravity="top"
+            android:padding="16dp"
+            android:layout_marginBottom="22dp" />
 
-        <EditText
-            android:id="@+id/dayInput"
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Release Day"
-            android:inputType="number" />
+            android:text="RELEASE DATE"
+            android:textColor="#A996FF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
 
-        <EditText
-            android:id="@+id/monthInput"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Release Month"
-            android:inputType="number" />
+            android:orientation="horizontal"
+            android:layout_marginBottom="28dp">
+
+            <EditText
+                android:id="@+id/dayInput"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:background="@drawable/movie_input_background"
+                android:hint="Day"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8E8FA9"
+                android:inputType="number"
+                android:maxLength="2"
+                android:padding="16dp"
+                android:layout_marginEnd="12dp" />
+
+            <EditText
+                android:id="@+id/monthInput"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:background="@drawable/movie_input_background"
+                android:hint="Month"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#8E8FA9"
+                android:inputType="number"
+                android:maxLength="2"
+                android:padding="16dp" />
+
+        </LinearLayout>
 
         <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Save"
-            android:layout_marginTop="24dp" />
+            android:layout_height="56dp"
+            android:text="SAVE MOVIE"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:backgroundTint="#7856FF"
+            android:layout_marginBottom="12dp" />
 
         <Button
             android:id="@+id/cancelButton"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Cancel" />
+            android:layout_height="56dp"
+            android:text="CANCEL"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:backgroundTint="#292A45" />
 
     </LinearLayout>
 

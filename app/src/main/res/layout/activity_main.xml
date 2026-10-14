@@ -6,28 +6,58 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center"
-    android:padding="32dp">
+    android:padding="28dp"
+    android:background="#0F1020">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="🎬"
+        android:textSize="64sp"
+        android:layout_marginBottom="20dp" />
 
     <TextView
         android:id="@+id/mainTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Movie App"
-        android:textSize="32sp"
+        android:text="MOVIE VAULT"
+        android:textColor="#FFFFFF"
+        android:textSize="34sp"
         android:textStyle="bold"
-        android:layout_marginBottom="32dp" />
+        android:letterSpacing="0.08"
+        android:gravity="center" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your personal movie collection"
+        android:textColor="#A6A6BC"
+        android:textSize="16sp"
+        android:gravity="center"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="48dp" />
 
     <Button
         android:id="@+id/viewMoviesButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View Movies"
+        android:layout_height="56dp"
+        android:text="EXPLORE MY MOVIES"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#7856FF"
         android:layout_marginBottom="16dp" />
 
     <Button
         android:id="@+id/addMovieButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Add Movie" />
+        android:layout_height="56dp"
+        android:text="+ ADD A MOVIE"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#292A45" />
+
+
 
 </LinearLayout>

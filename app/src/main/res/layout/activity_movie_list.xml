@@ -5,27 +5,43 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp"
+    android:background="#0F1020">
 
     <TextView
         android:id="@+id/moviesTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Upcoming Movies"
-        android:textSize="28sp"
+        android:text="My Movies"
+        android:textColor="#FFFFFF"
+        android:textSize="30sp"
         android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your personal collection"
+        android:textColor="#A6A6BC"
+        android:textSize="15sp"
+        android:layout_marginBottom="24dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/moviesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
 
     <Button
         android:id="@+id/returnButton"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Back to Menu" />
+        android:layout_height="56dp"
+        android:text="BACK TO MENU"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:backgroundTint="#292A45" />
 
 </LinearLayout>
