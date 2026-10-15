@@ -57,6 +57,7 @@
         android:clipToPadding="false"
         android:paddingBottom="16dp" />
 
+
     <Button
         android:id="@+id/returnButton"
         android:layout_width="match_parent"
@@ -64,6 +65,8 @@
         android:text="BACK TO MENU"
         android:textColor="#FFFFFF"
         android:textStyle="bold"
-        android:backgroundTint="#292A45" />
+        android:backgroundTint="#292A45"
+        android:layout_marginBottom="48dp" />
+
 
 </LinearLayout>
