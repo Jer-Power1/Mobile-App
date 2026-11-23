@@ -84,7 +84,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="8dp" />
 
-
         <Button
             android:id="@+id/datePickerButton"
             android:layout_width="match_parent"
@@ -105,6 +104,39 @@
             android:textSize="14sp"
             android:layout_marginBottom="28dp" />
 
+        <!-- Movie poster heading -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="MOVIE POSTER"
+            android:textColor="#A996FF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Shows the selected movie poster -->
+        <ImageView
+            android:id="@+id/imageViewAdd"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:scaleType="centerCrop"
+            android:adjustViewBounds="true"
+            android:background="@drawable/movie_input_background"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:contentDescription="Movie poster preview"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Opens the image picker -->
+        <Button
+            android:id="@+id/imagePickButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="SELECT MOVIE POSTER"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:backgroundTint="#292A45"
+            android:layout_marginBottom="28dp" />
 
         <Button
             android:id="@+id/saveButton"
