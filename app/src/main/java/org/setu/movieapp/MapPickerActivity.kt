@@ -40,8 +40,6 @@ class MapPickerActivity : AppCompatActivity() {
         map.controller.setZoom(18.0)
         map.controller.setCenter(start)
 
-        setSelectedPoint(start)
-
         // Allows the user to select a location on the map
         val receiver = object : MapEventsReceiver {
 
@@ -58,6 +56,12 @@ class MapPickerActivity : AppCompatActivity() {
 
         map.overlays.add(MapEventsOverlay(receiver))
 
+        // Display previously saved movie locations
+        showExistingMarkers()
+
+        // Display the selected location marker
+        setSelectedPoint(start)
+
         val confirmButton =
             findViewById<Button>(R.id.confirmLocationButton)
 
@@ -73,6 +77,41 @@ class MapPickerActivity : AppCompatActivity() {
 
             finish()
         }
+    }
+
+    // Displays markers for all saved movie locations
+    private fun showExistingMarkers() {
+
+        val movies = AppData.movies.findAll()
+
+        for (movie in movies) {
+
+            val latitude = movie.latitude
+            val longitude = movie.longitude
+
+            // Only display movies with a saved location
+            if (latitude != null && longitude != null) {
+
+                val marker = Marker(map)
+
+                marker.position = GeoPoint(
+                    latitude,
+                    longitude
+                )
+
+                marker.title = movie.title
+                marker.snippet = movie.description
+
+                marker.setAnchor(
+                    Marker.ANCHOR_CENTER,
+                    Marker.ANCHOR_BOTTOM
+                )
+
+                map.overlays.add(marker)
+            }
+        }
+
+        map.invalidate()
     }
 
     // Creates or moves the selected location marker
