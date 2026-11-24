@@ -3,6 +3,7 @@ package org.setu.movieapp
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
@@ -20,6 +21,9 @@ class MapPickerActivity : AppCompatActivity() {
     private lateinit var selectedPoint: GeoPoint
     private var selectedMarker: Marker? = null
 
+    private var movieTitle = ""
+    private var editingMovieId = -1L
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -34,8 +38,29 @@ class MapPickerActivity : AppCompatActivity() {
         map.setTileSource(TileSourceFactory.MAPNIK)
         map.setMultiTouchControls(true)
 
-        // Start the map in Waterford
-        val start = GeoPoint(52.245954, -7.139539)
+        // Receive the current movie details
+        movieTitle = intent.getStringExtra("movieTitle") ?: ""
+
+        editingMovieId = intent.getLongExtra("movieId", -1L)
+
+        // Receive the previously selected coordinates
+        val latitude =
+            intent.getDoubleExtra("latitude", Double.NaN)
+
+        val longitude =
+            intent.getDoubleExtra("longitude", Double.NaN)
+
+        // Use the saved location or start in Waterford
+        val start = if (
+            latitude.isFinite() &&
+            longitude.isFinite() &&
+            latitude in -90.0..90.0 &&
+            longitude in -180.0..180.0
+        ) {
+            GeoPoint(latitude, longitude)
+        } else {
+            GeoPoint(52.245954, -7.139539)
+        }
 
         map.controller.setZoom(18.0)
         map.controller.setCenter(start)
@@ -79,12 +104,17 @@ class MapPickerActivity : AppCompatActivity() {
         }
     }
 
-    // Displays markers for all saved movie locations
+    // Displays markers for saved movie locations
     private fun showExistingMarkers() {
 
         val movies = AppData.movies.findAll()
 
         for (movie in movies) {
+
+            // Skip the movie currently being edited
+            if (movie.id == editingMovieId) {
+                continue
+            }
 
             val latitude = movie.latitude
             val longitude = movie.longitude
@@ -107,6 +137,13 @@ class MapPickerActivity : AppCompatActivity() {
                     Marker.ANCHOR_BOTTOM
                 )
 
+                // Saved movie locations use blue markers
+                marker.icon?.let { icon ->
+                    marker.icon = icon.mutate().apply {
+                        setTint(Color.parseColor("#2196F3"))
+                    }
+                }
+
                 map.overlays.add(marker)
             }
         }
@@ -121,18 +158,34 @@ class MapPickerActivity : AppCompatActivity() {
 
         if (selectedMarker == null) {
 
-            selectedMarker = Marker(map)
+            val marker = Marker(map)
 
-            selectedMarker?.setAnchor(
+            marker.setAnchor(
                 Marker.ANCHOR_CENTER,
                 Marker.ANCHOR_BOTTOM
             )
 
-            map.overlays.add(selectedMarker!!)
+            // The selected location uses a purple marker
+            marker.icon?.let { icon ->
+                marker.icon = icon.mutate().apply {
+                    setTint(Color.parseColor("#7856FF"))
+                }
+            }
+
+            selectedMarker = marker
+
+            map.overlays.add(marker)
         }
 
+        selectedMarker?.closeInfoWindow()
+
         selectedMarker?.position = point
-        selectedMarker?.title = "Selected Cinema Location"
+
+        selectedMarker?.title = movieTitle.ifBlank {
+            "Selected Cinema Location"
+        }
+
+        selectedMarker?.snippet = "Selected Cinema Location"
 
         map.invalidate()
     }
@@ -147,5 +200,11 @@ class MapPickerActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         map.onPause()
+    }
+
+    // Release map resources when closing the activity
+    override fun onDestroy() {
+        map.onDetach()
+        super.onDestroy()
     }
 }

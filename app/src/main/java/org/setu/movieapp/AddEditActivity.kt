@@ -128,15 +128,8 @@ class AddEditActivity : AppCompatActivity() {
             imagePicker.launch(arrayOf("image/*"))
         }
 
-        // Opens the cinema location picker
         locationButton.setOnClickListener {
-
-            val intent = Intent(
-                this,
-                MapPickerActivity::class.java
-            )
-
-            mapPicker.launch(intent)
+            openMapPicker()
         }
 
         saveButton.setOnClickListener {
@@ -146,6 +139,39 @@ class AddEditActivity : AppCompatActivity() {
         cancelButton.setOnClickListener {
             finish()
         }
+    }
+
+    // Opens the map with the current movie details
+    private fun openMapPicker() {
+
+        val mapIntent = Intent(
+            this,
+            MapPickerActivity::class.java
+        )
+
+        val latitude = selectedLatitude
+        val longitude = selectedLongitude
+
+        // Pass the previously selected location to the map
+        if (latitude != null && longitude != null) {
+
+            mapIntent.putExtra("latitude", latitude)
+            mapIntent.putExtra("longitude", longitude)
+        }
+
+        // Pass the movie title to the selected marker
+        mapIntent.putExtra(
+            "movieTitle",
+            titleInput.text.toString().trim()
+        )
+
+        // Pass the movie ID to avoid duplicate markers
+        mapIntent.putExtra(
+            "movieId",
+            editingId ?: -1L
+        )
+
+        mapPicker.launch(mapIntent)
     }
 
     // Opens the release date picker
