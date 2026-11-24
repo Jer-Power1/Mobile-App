@@ -48,10 +48,8 @@ class AddEditActivity : AppCompatActivity() {
                     // Some image providers do not allow this
                 }
 
-                // Stores the image URI
+                // Stores and displays the selected image
                 selectedImageUri = uri
-
-                // Shows the selected image
                 imagePreview.setImageURI(uri)
             }
         }
@@ -117,9 +115,7 @@ class AddEditActivity : AppCompatActivity() {
     // Opens the calendar to select a release date
     private fun showDatePicker() {
 
-        // Gets today's date
         val calendar = Calendar.getInstance()
-
         val year = calendar.get(Calendar.YEAR)
 
         // Uses the selected month or today's month
@@ -132,7 +128,7 @@ class AddEditActivity : AppCompatActivity() {
 
         val datePicker = DatePickerDialog(
             this,
-            { _, selectedYear, selectedMonthIndex, selectedDayOfMonth ->
+            { _, _, selectedMonthIndex, selectedDayOfMonth ->
 
                 // Stores the selected day
                 selectedDay = selectedDayOfMonth
@@ -148,7 +144,6 @@ class AddEditActivity : AppCompatActivity() {
             day
         )
 
-        // Shows the calendar
         datePicker.show()
     }
 
@@ -159,7 +154,6 @@ class AddEditActivity : AppCompatActivity() {
 
         if (day != null && month != null) {
 
-            // List of month names
             val monthNames = listOf(
                 "January", "February", "March", "April",
                 "May", "June", "July", "August",
@@ -198,6 +192,22 @@ class AddEditActivity : AppCompatActivity() {
         selectedMonth = movie.releaseMonth.toInt()
 
         updateDateText()
+
+        // Converts the saved image string back into a URI
+        selectedImageUri = movie.imageUri?.let {
+            Uri.parse(it)
+        }
+
+        // Displays the saved image if one exists
+        if (selectedImageUri != null) {
+            imagePreview.setImageURI(selectedImageUri)
+        } else {
+
+            // Shows the default image if no poster was selected
+            imagePreview.setImageResource(
+                android.R.drawable.ic_menu_gallery
+            )
+        }
     }
 
     // Checks the movie details and saves them
@@ -232,32 +242,47 @@ class AddEditActivity : AppCompatActivity() {
             title = title,
             description = description,
             releaseDay = day.toDouble(),
-            releaseMonth = month.toDouble()
+            releaseMonth = month.toDouble(),
+
+            // Converts the selected image URI into a string
+            imageUri = selectedImageUri?.toString()
         )
 
-        // Adds a new movie if there is no editing ID
-        if (editingId == null) {
-            AppData.movies.create(movie)
+        try {
 
+            // Adds a new movie if there is no editing ID
+            if (editingId == null) {
+                AppData.movies.create(movie)
+
+                Toast.makeText(
+                    this,
+                    "Movie created",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+            } else {
+
+                // Updates the existing movie
+                AppData.movies.update(movie)
+
+                Toast.makeText(
+                    this,
+                    "Movie updated",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            // Returns to the previous screen after saving
+            finish()
+
+        } catch (e: IllegalArgumentException) {
+
+            // Shows the validation error without closing the screen
             Toast.makeText(
                 this,
-                "Movie created",
-                Toast.LENGTH_SHORT
-            ).show()
-
-        } else {
-
-            // Updates the existing movie
-            AppData.movies.update(movie)
-
-            Toast.makeText(
-                this,
-                "Movie updated",
+                e.message ?: "Invalid movie details",
                 Toast.LENGTH_SHORT
             ).show()
         }
-
-        // Returns to the previous screen
-        finish()
     }
 }
