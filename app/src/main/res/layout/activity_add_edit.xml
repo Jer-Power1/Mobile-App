@@ -138,6 +138,38 @@
             android:backgroundTint="#292A45"
             android:layout_marginBottom="28dp" />
 
+        <!-- Cinema location heading -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CINEMA LOCATION"
+            android:textColor="#A996FF"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Opens the map picker -->
+        <Button
+            android:id="@+id/buttonLoc"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="SELECT CINEMA LOCATION"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:backgroundTint="#292A45"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Shows the selected cinema location -->
+        <TextView
+            android:id="@+id/selectedLocationText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No cinema location selected"
+            android:textColor="#A6A6BC"
+            android:textSize="14sp"
+            android:layout_marginBottom="28dp" />
+
         <Button
             android:id="@+id/saveButton"
             android:layout_width="match_parent"
