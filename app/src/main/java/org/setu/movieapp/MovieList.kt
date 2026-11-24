@@ -1,10 +1,9 @@
 
 package org.setu.movieapp
 
-// Stores the movies and handles CRUD
 class MovieList {
 
-    // List that holds all the movies
+    // Stores all movies in memory
     private val movies = ArrayList<Movie>()
 
     // Returns all movies
@@ -17,13 +16,11 @@ class MovieList {
         return movies.find { it.id == id }
     }
 
-    // Adds a new movie
+    // Creates a new movie
     fun create(movie: Movie) {
 
-        // Checks the movie details before adding it
         movie.validate()
 
-        // Gives the new movie an ID
         movie.id = (movies.maxOfOrNull { it.id } ?: 0L) + 1L
 
         movies.add(movie)
@@ -32,20 +29,21 @@ class MovieList {
     // Updates an existing movie
     fun update(movie: Movie) {
 
-        // Checks the new details before updating
         movie.validate()
 
         val foundMovie = findOne(movie.id)
 
-        // Updates the movie if it exists
         if (foundMovie != null) {
+
             foundMovie.title = movie.title
             foundMovie.description = movie.description
             foundMovie.releaseDay = movie.releaseDay
             foundMovie.releaseMonth = movie.releaseMonth
-
-            // Updates the saved movie image
             foundMovie.imageUri = movie.imageUri
+
+            // Update the cinema location
+            foundMovie.latitude = movie.latitude
+            foundMovie.longitude = movie.longitude
         }
     }
 

@@ -253,6 +253,12 @@ class AddEditActivity : AppCompatActivity() {
 
         updateDateText()
 
+        // Restore the saved cinema location
+        selectedLatitude = movie.latitude
+        selectedLongitude = movie.longitude
+
+        updateLocationText()
+
         selectedImageUri = movie.imageUri?.let {
             Uri.parse(it)
         }
@@ -297,13 +303,16 @@ class AddEditActivity : AppCompatActivity() {
             return
         }
 
+        // Save all movie details including the cinema location
         val movie = Movie(
             id = editingId ?: 0L,
             title = title,
             description = description,
             releaseDay = day.toDouble(),
             releaseMonth = month.toDouble(),
-            imageUri = selectedImageUri?.toString()
+            imageUri = selectedImageUri?.toString(),
+            latitude = selectedLatitude,
+            longitude = selectedLongitude
         )
 
         try {
