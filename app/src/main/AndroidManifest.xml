@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MovieApp">
 
+        <!-- Cinema location picker screen -->
+        <activity
+            android:name=".MapPickerActivity"
+            android:exported="false" />
+
         <activity
             android:name=".AddEditActivity"
             android:exported="false" />

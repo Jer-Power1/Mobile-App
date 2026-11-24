@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0F1020"
+    android:padding="16dp">
+
+    <!-- Map screen heading -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Cinema Location"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Instructions for selecting a location -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap the map to select a cinema location"
+        android:textColor="#A6A6BC"
+        android:textSize="14sp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Displays the OpenStreetMap map -->
+    <org.osmdroid.views.MapView
+        android:id="@+id/map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- OpenStreetMap attribution -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="© OpenStreetMap contributors"
+        android:textColor="#A6A6BC"
+        android:textSize="12sp"
+        android:gravity="end"
+        android:layout_marginTop="4dp" />
+
+    <!-- Confirms the selected location -->
+    <Button
+        android:id="@+id/confirmLocationButton"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:text="USE THIS LOCATION"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold"
+        android:backgroundTint="#7856FF"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp" />
+
+</LinearLayout>
