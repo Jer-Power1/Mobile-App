@@ -1,9 +1,11 @@
+
 plugins {
     alias(libs.plugins.android.application)
 }
 
 android {
     namespace = "org.setu.movieapp"
+
     compileSdk {
         version = release(37)
     }
@@ -25,12 +27,12 @@ android {
             }
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
 }
-
 
 dependencies {
     implementation(libs.androidx.activity.ktx)
@@ -40,6 +42,9 @@ dependencies {
     implementation(libs.material)
 
     implementation("com.jakewharton.timber:timber:5.0.1")
+
+    // OpenStreetMap library for the cinema location picker
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.espresso.core)
