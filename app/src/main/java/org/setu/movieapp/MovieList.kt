@@ -67,6 +67,9 @@ class MovieList(private val file: File? = null) {
         movie.id = (movies.maxOfOrNull { it.id } ?: 0L) + 1L
 
         movies.add(movie)
+
+        // Save after creating a movie
+        save()
     }
 
     // Updates an existing movie
@@ -87,11 +90,20 @@ class MovieList(private val file: File? = null) {
             // Update the cinema location
             foundMovie.latitude = movie.latitude
             foundMovie.longitude = movie.longitude
+
+            // Save after updating a movie
+            save()
         }
     }
 
     // Deletes a movie using its ID
     fun delete(id: Long) {
-        movies.removeAll { it.id == id }
+
+        val deleted = movies.removeAll { it.id == id }
+
+        // Save only if a movie was deleted
+        if (deleted) {
+            save()
+        }
     }
 }
