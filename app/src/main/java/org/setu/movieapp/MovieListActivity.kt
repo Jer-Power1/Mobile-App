@@ -9,11 +9,13 @@ import android.widget.Button
 import android.widget.Spinner
 import android.widget.AdapterView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import timber.log.Timber
+import java.io.IOException
 
 class MovieListActivity : AppCompatActivity(), OnMovieListener {
 
@@ -91,6 +93,18 @@ class MovieListActivity : AppCompatActivity(), OnMovieListener {
         returnButton.setOnClickListener {
             finish()
         }
+
+        // Inform the user if saved movies could not be loaded
+        AppData.movies.loadError?.let { message ->
+
+            AlertDialog.Builder(this)
+                .setTitle("Storage Error")
+                .setMessage(
+                    "$message Your saved file has not been overwritten."
+                )
+                .setPositiveButton("OK", null)
+                .show()
+        }
     }
 
     private fun filterMovies(selectedMonth: Int) {
@@ -118,16 +132,30 @@ class MovieListActivity : AppCompatActivity(), OnMovieListener {
     }
 
     override fun onMovieLongClick(movie: Movie): Boolean {
+
         AlertDialog.Builder(this)
             .setTitle("Delete Movie")
             .setMessage("Are you sure you want to delete ${movie.title}?")
             .setPositiveButton("Delete") { _, _ ->
+
                 Timber.i("Deleting movie: ${movie.title}")
 
-                AppData.movies.delete(movie.id)
+                try {
 
-                // Keep the selected month filter active
-                filterMovies(monthSpinner.selectedItemPosition)
+                    AppData.movies.delete(movie.id)
+
+                    // Keep the selected month filter active
+                    filterMovies(monthSpinner.selectedItemPosition)
+
+                } catch (e: IOException) {
+
+                    // Inform the user if deletion could not be saved
+                    Toast.makeText(
+                        this,
+                        e.message ?: "Unable to delete movie",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()

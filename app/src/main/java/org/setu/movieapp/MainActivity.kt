@@ -14,14 +14,6 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
-        // Set up Timber logging
-        if (Timber.treeCount == 0) {
-            Timber.plant(Timber.DebugTree())
-        }
-
-        // Load the saved movie data
-        AppData.initialize(this)
-
         val viewMoviesButton =
             findViewById<Button>(R.id.viewMoviesButton)
 

@@ -1,21 +1,31 @@
 
 package org.setu.movieapp
 
+import android.util.AtomicFile
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import timber.log.Timber
 import java.io.File
+import java.io.FileNotFoundException
+import java.io.IOException
 
 class MovieList(private val file: File) {
 
     // Stores all movies in memory
     private val movies = ArrayList<Movie>()
 
-    // Converts movie objects to and from JSON
+    // Converts movies to and from JSON
     private val gson = GsonBuilder()
         .setPrettyPrinting()
         .create()
 
-    // Load saved movies when the list is created
+    // Helps protect the file during saving
+    private val atomicFile = AtomicFile(file)
+
+    // Stores any error that occurred during loading
+    var loadError: String? = null
+        private set
+
     init {
         load()
     }
@@ -23,26 +33,88 @@ class MovieList(private val file: File) {
     // Loads movies from the JSON file
     private fun load() {
 
-        if (!file.exists()) {
-            return
+        try {
+
+            val json = atomicFile.openRead()
+                .bufferedReader()
+                .use { it.readText() }
+
+            val type =
+                object : TypeToken<ArrayList<Movie>>() {}.type
+
+            val loaded: ArrayList<Movie> =
+                gson.fromJson<ArrayList<Movie>>(json, type)
+                    ?: throw IOException("Invalid movie data")
+
+            // Validate the saved movie details
+            loaded.forEach { it.validate() }
+
+            require(loaded.all { it.id > 0L })
+            require(loaded.map { it.id }.distinct().size == loaded.size)
+
+            movies.clear()
+            movies.addAll(loaded)
+
+            Timber.i("Loaded ${movies.size} movies")
+
+        } catch (e: FileNotFoundException) {
+
+            if (file.exists() ||
+                File(file.path + ".bak").exists()
+            ) {
+                loadError = "Unable to read saved movies."
+                Timber.e(e, "Unable to read movie file")
+            } else {
+                Timber.i("No saved movie file found")
+            }
+
+        } catch (e: Exception) {
+
+            loadError = "Unable to load saved movies."
+
+            Timber.e(e, "Error loading movie data")
         }
-
-        val type = object : TypeToken<ArrayList<Movie>>() {}.type
-
-        val loaded: ArrayList<Movie> =
-            gson.fromJson(file.readText(), type)
-                ?: arrayListOf()
-
-        movies.clear()
-        movies.addAll(loaded)
     }
 
-    // Saves movies to the JSON file
-    private fun save() {
+    // Saves the updated movie list safely
+    private fun save(updatedMovies: List<Movie>) {
 
-        file.parentFile?.mkdirs()
+        // Do not overwrite data that failed to load
+        if (loadError != null) {
+            throw IOException(
+                "Saved data could not be loaded. Changes are blocked."
+            )
+        }
 
-        file.writeText(gson.toJson(movies))
+        try {
+
+            file.parentFile?.mkdirs()
+
+            val json = gson.toJson(updatedMovies)
+
+            val output = atomicFile.startWrite()
+
+            try {
+
+                output.write(json.toByteArray(Charsets.UTF_8))
+
+                atomicFile.finishWrite(output)
+
+            } catch (e: Exception) {
+
+                atomicFile.failWrite(output)
+
+                throw e
+            }
+
+            Timber.i("Saved ${updatedMovies.size} movies")
+
+        } catch (e: Exception) {
+
+            Timber.e(e, "Error saving movie data")
+
+            throw IOException("Unable to save movie data.", e)
+        }
     }
 
     // Returns all movies
@@ -62,10 +134,14 @@ class MovieList(private val file: File) {
 
         movie.id = (movies.maxOfOrNull { it.id } ?: 0L) + 1L
 
-        movies.add(movie)
+        val updatedMovies = ArrayList(movies)
 
-        // Save after creating a movie
-        save()
+        updatedMovies.add(movie)
+
+        // Save before changing the list in memory
+        save(updatedMovies)
+
+        movies.add(movie)
     }
 
     // Updates an existing movie
@@ -73,33 +149,35 @@ class MovieList(private val file: File) {
 
         movie.validate()
 
-        val foundMovie = findOne(movie.id)
+        val index = movies.indexOfFirst { it.id == movie.id }
 
-        if (foundMovie != null) {
-
-            foundMovie.title = movie.title
-            foundMovie.description = movie.description
-            foundMovie.releaseDay = movie.releaseDay
-            foundMovie.releaseMonth = movie.releaseMonth
-            foundMovie.imageUri = movie.imageUri
-
-            // Update the cinema location
-            foundMovie.latitude = movie.latitude
-            foundMovie.longitude = movie.longitude
-
-            // Save after updating a movie
-            save()
+        if (index == -1) {
+            throw IllegalArgumentException("Movie not found")
         }
+
+        val updatedMovies = ArrayList(movies)
+
+        updatedMovies[index] = movie
+
+        // Save before updating the list in memory
+        save(updatedMovies)
+
+        movies[index] = movie
     }
 
     // Deletes a movie using its ID
     fun delete(id: Long) {
 
-        val deleted = movies.removeAll { it.id == id }
+        val updatedMovies = ArrayList(movies)
 
-        // Save only if a movie was deleted
+        val deleted = updatedMovies.removeAll { it.id == id }
+
         if (deleted) {
-            save()
+
+            // Save before deleting from the list in memory
+            save(updatedMovies)
+
+            movies.removeAll { it.id == id }
         }
     }
 }
