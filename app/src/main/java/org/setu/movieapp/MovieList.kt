@@ -1,10 +1,53 @@
 
 package org.setu.movieapp
 
-class MovieList {
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
+import java.io.File
+
+class MovieList(private val file: File? = null) {
 
     // Stores all movies in memory
     private val movies = ArrayList<Movie>()
+
+    // Converts movie objects to and from JSON
+    private val gson = GsonBuilder()
+        .setPrettyPrinting()
+        .create()
+
+    // Load saved movies when the list is created
+    init {
+        load()
+    }
+
+    // Loads movies from the JSON file
+    private fun load() {
+
+        val storageFile = file ?: return
+
+        if (!storageFile.exists()) {
+            return
+        }
+
+        val type = object : TypeToken<ArrayList<Movie>>() {}.type
+
+        val loaded: ArrayList<Movie> =
+            gson.fromJson(storageFile.readText(), type)
+                ?: arrayListOf()
+
+        movies.clear()
+        movies.addAll(loaded)
+    }
+
+    // Saves movies to the JSON file
+    private fun save() {
+
+        val storageFile = file ?: return
+
+        storageFile.parentFile?.mkdirs()
+
+        storageFile.writeText(gson.toJson(movies))
+    }
 
     // Returns all movies
     fun findAll(): List<Movie> {
