@@ -14,26 +14,32 @@ class MainActivity : AppCompatActivity() {
 
         setContentView(R.layout.activity_main)
 
+        // Set up Timber logging
+        if (Timber.treeCount == 0) {
+            Timber.plant(Timber.DebugTree())
+        }
+
+        // Load the saved movie data
+        AppData.initialize(this)
+
         val viewMoviesButton =
             findViewById<Button>(R.id.viewMoviesButton)
 
         val addMovieButton =
             findViewById<Button>(R.id.addMovieButton)
 
+        // Opens the movie list
         viewMoviesButton.setOnClickListener {
             startActivity(
                 Intent(this, MovieListActivity::class.java)
             )
         }
 
+        // Opens the add movie screen
         addMovieButton.setOnClickListener {
             startActivity(
                 Intent(this, AddEditActivity::class.java)
             )
-        }
-
-        if (Timber.treeCount == 0) {
-            Timber.plant(Timber.DebugTree())
         }
 
         Timber.i("Movie App started")

@@ -5,7 +5,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import java.io.File
 
-class MovieList(private val file: File? = null) {
+class MovieList(private val file: File) {
 
     // Stores all movies in memory
     private val movies = ArrayList<Movie>()
@@ -23,16 +23,14 @@ class MovieList(private val file: File? = null) {
     // Loads movies from the JSON file
     private fun load() {
 
-        val storageFile = file ?: return
-
-        if (!storageFile.exists()) {
+        if (!file.exists()) {
             return
         }
 
         val type = object : TypeToken<ArrayList<Movie>>() {}.type
 
         val loaded: ArrayList<Movie> =
-            gson.fromJson(storageFile.readText(), type)
+            gson.fromJson(file.readText(), type)
                 ?: arrayListOf()
 
         movies.clear()
@@ -42,11 +40,9 @@ class MovieList(private val file: File? = null) {
     // Saves movies to the JSON file
     private fun save() {
 
-        val storageFile = file ?: return
+        file.parentFile?.mkdirs()
 
-        storageFile.parentFile?.mkdirs()
-
-        storageFile.writeText(gson.toJson(movies))
+        file.writeText(gson.toJson(movies))
     }
 
     // Returns all movies
