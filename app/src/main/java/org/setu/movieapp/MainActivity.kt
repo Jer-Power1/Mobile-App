@@ -20,20 +20,18 @@ class MainActivity : AppCompatActivity() {
         val addMovieButton =
             findViewById<Button>(R.id.addMovieButton)
 
+        // Opens the movie list
         viewMoviesButton.setOnClickListener {
             startActivity(
                 Intent(this, MovieListActivity::class.java)
             )
         }
 
+        // Opens the add movie screen
         addMovieButton.setOnClickListener {
             startActivity(
                 Intent(this, AddEditActivity::class.java)
             )
-        }
-
-        if (Timber.treeCount == 0) {
-            Timber.plant(Timber.DebugTree())
         }
 
         Timber.i("Movie App started")

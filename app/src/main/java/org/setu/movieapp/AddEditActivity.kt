@@ -12,6 +12,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import java.io.IOException
 import java.util.Calendar
 import java.util.Locale
 
@@ -372,6 +373,15 @@ class AddEditActivity : AppCompatActivity() {
                 this,
                 e.message ?: "Invalid movie details",
                 Toast.LENGTH_SHORT
+            ).show()
+
+        } catch (e: IOException) {
+
+            // Keep the form open if saving fails
+            Toast.makeText(
+                this,
+                e.message ?: "Unable to save movie",
+                Toast.LENGTH_LONG
             ).show()
         }
     }
